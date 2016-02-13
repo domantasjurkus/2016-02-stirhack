@@ -1,69 +1,19 @@
-# V2 - Big changes incoming!
+DOGFI.SH Challenge
+1.  Obtain an API key, login and password from DOGFI.SH
+(get me @JrdnDncn)
 
-# Deployment
+2.  The teams can then visit http://dogfish.tech/api/apis to find the list of apis
 
-You deploy to api.nomyap.com by adding a remote gitrepo to your version. To do that you must have an account on the server. Add the repo using
+3.  Apis are accessed through the format http://dogfish.tech/api/<endpoint>/<params>
 
-    git remote add live ssh://NAME@api.nomyap.com/var/repo/api.git
-  
-substitute NAME for your username on the server. You then deploy by pushing to the live master branch using:
+For example, api1 is http://dogfish.tech/api/api1/LAX and api4 is is http://dogfish.tech/api/api4/?user_id=524549267&count=15
 
-    git push live master
+4.  If access type is “always”, no attional params are required.
+5.  If access type is “auth”, pass your teams auth key as a get parameter called “auth”.
+6.  If access type is “token”, you must hit http://dogfish.tech/api/login?user=<user>&password=<password>. This will return a token which you pass to the api endpoint as a GET parameter called “token”
 
-This will automatically put the master branch on the server. Remember to keep the master branch of the github repo and the live repo in sync.
+The API endpoints have a 1 in 50 chance of failing in various ways. 
 
-# API
-
-Note: Every GET request has to have (str)token as a parameter in in teh header in order to identify the user.
-
-
-
-## User Routes (V2 updated)
-Method | Route                 | Parameters      | Description
------- | --------------------- | --------------- | -------
-POST   | /user/register        | email, password | Registers a user (sends activation email)
-GET    | /user/activate        |                 | Activates account from an email link
-POST   | /user/resend          | email           | (json)win/fail
-POST   | /user/email-reset-password |            | Request a password reset email
-POST   | /user/reset-password  | hash, password  | Changes the users password
-POST   | /user/login           | email, password | Returns token
-POST   | /user/authenticate    | token           | Checks if token is valid
-POST   | /user/update          | name, surname, studying, bio, country | Update user details
-POST   | /user/myprofile       |                 | Returns (json)user_data
-POST   | /user/profile/:userId | userId          | Returns (json)user_data
-POST   | /user/upload-image    | imagefile       | (json)win/fail
-POST   | /user/block/:userId   |                 | (json)win/fail
-POST   | /user/unblock/:userId |                 | (json)win/fail
-POST   | /user/get-blocked     |                 | Returns (array)blocked_ids
-POST   | /user/available/:mins |                 | Sets the user as available
-POST   | /user/reset           |                 | Sets the user as unavailable
-GET    | /user/available-for   |                 | Returns availability in minutes (or NULL if unavailable)
+If you would like to force an API to fail, pass “broken=1” as GET. To force an API to work, pass “working=1” as GET.
 
 
-
-## Meet Routes (updated)
-Method | Route                  | Parameters        | Description
------- | ---------------------- | ----------------- | -------
-GET    | /meets/available       |                   | Returns a list of available users
-POST   | /meets/invite/:userId  |                   | Returns (json)win/fail
-GET    | /meets/get             |                   | Returns current meet (if any)
-GET    | /meets/get-previous    |                   | Returns a list of previous meets
-GET    | /meets/get-interested  |                   | Returns a list of people who have invited you
-POST   | /meets/confirm/:meetId |                   | (json)win/fail
-POST   | /meets/cancel/:meetId  |                   | (json)win/fail
-POST   | /meets/change-location/:meetId/:locId |    | (json)win/fail
-POST   | /meets/chat            | meets_id, content | (json)win/fail
-POST   | /meets/chat/mark       | meets_id,         | (json)win/fail
-POST   | /meets/report          | meets_id, message | (json)win/fail
-
-
-
-## Other Routes
-Method | Route                 | Parameters      | Description
------- | --------------------- | --------------- | -------
-GET    | /                     |                 | "Welcome to Nomyap API"
-GET    | /phpinfo              |                 | PHP information
-POST   | /locations/get        | category        | (json)location_data
-POST   | /feedback             | content         | (json)win/fail
-
-Feedback should be sent to:
