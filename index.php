@@ -17,7 +17,6 @@ $app->get('/phpinfo', function() {
     return phpinfo();
 });
 
-# Privacy page
 $app->get("/status", function() use ($app, $APIS) {
 
     $headers = array("Accept" => "application/json");
@@ -44,6 +43,11 @@ $app->get("/status", function() use ($app, $APIS) {
         "code2" => $code2,
         "code3" => $code3
     ));
+});
+
+# Check the APIs every few seconds and record errors
+$app->get("/check", function() use ($db) {
+
 });
 
 $app->run();
