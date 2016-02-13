@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="/www/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/www/css/style.css">
+</head>
+<body>
+    <div class="jumbotron">
+        <div id="header" class="container">
+            <img id="logo" src="/www/img/logo.png" />
+            <h3 id="heading">Reset password</h3>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="jumbotron" style="max-width: 500px;margin: 0 auto;">
+
+            <form id="form" action="{{api}}/user/reset-password" method="post" enctype="multipart/form-data">
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">New Password</label>
+                    <div class="col-sm-6">
+                        <input id="password_field" type="password" class="form-control" name="password" minlength="6" placeholder="Careful this time!">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Repeat Password</label>
+                    <div class="col-sm-6">
+                        <input id="password_field2" type="password" class="form-control" name="password2" placeholder="I'll check if these match">
+                    </div>
+                </div>
+                <input type="hidden" name="hash" value="{{hash}}" />
+                <div class="form-group row">
+                    <div class="col-sm-offset-4 col-sm-10">
+                        <button id="submit_button" type="submit" class="btn btn-default" disabled>Reset</button>
+                        <label id="password_label" style="visibility: hidden;">  Err, passwords do not match</label>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="/www/js/jquery.min.js"></script>
+    <script src="/www/js/jquery.validate.min.js"></script>
+    <script src="/www/js/check-password.js"></script>
+</body>
+</html>

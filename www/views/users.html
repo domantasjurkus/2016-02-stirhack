@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="/www/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/www/css/style.css">
+</head>
+<body>
+    <div class="jumbotron">
+        <div id="header" class="container">
+            <img id="logo" src="/www/img/logo.png" />
+            <h3 id="heading">User administration page</h3>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="jumbotron">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Is banned?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            {% for atr in user %}
+                                <td class="tdata">{{atr}}</td>
+                            {% endfor %}
+                            <td class="tdata">
+                              <button class="btn btn-primary" onclick="sendBanRequest()">Ban</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <script src="/www/js/jquery.min.js"></script>
+</body>
+</html>

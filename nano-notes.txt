@@ -1,0 +1,12 @@
+List of useful commands for using Ubuntu Nano
+API running on Digital Ocean Ubuntu 15.04
+
+^ = Ctrl
+
+^G			Help
+^X			Exit
+^O 	(F3)
+^K			Cut
+^U 			Uncut (paste)
+Alt+\		Go the top
+Alt+/		Go to bottom

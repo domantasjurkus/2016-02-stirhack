@@ -1,0 +1,12 @@
+{
+  "require": {
+    "slim/slim": "^2.6",
+    "vrana/notorm": "dev-master",
+    "palanik/corsslim": "*",
+    "intervention/image": "^2.3",
+    "mailgun/mailgun-php": ">=1.7.2",
+    "mashape/unirest-php": "^2.6",
+    "slim/views": "*",
+    "twig/twig": "^1.24"
+  }
+}

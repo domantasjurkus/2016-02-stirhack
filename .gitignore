@@ -1,0 +1,6 @@
+.idea
+/plugins
+/img
+/v2
+includes/config.php
+/cron

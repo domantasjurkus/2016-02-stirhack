@@ -1,0 +1,26 @@
+body {
+  background: #c90006;
+  color: #ffffff;
+  font-family: "Calibri", sans-serif;
+}
+.jumbotron {
+  background: #a60000;
+}
+#logo {
+  display: inline;
+  width: 100px;
+  border-radius: 5px;
+}
+#heading {
+  display:inline;
+  padding-left: 30px;
+}
+#privacy {
+  font-family: "Lato", sans-serif;
+}
+#privacy > p{
+  font-size: 100%;
+}
+.tdata {
+  padding: 3px 5px;
+}
