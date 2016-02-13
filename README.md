@@ -17,3 +17,4 @@ The API endpoints have a 1 in 50 chance of failing in various ways.
 If you would like to force an API to fail, pass “broken=1” as GET. To force an API to work, pass “working=1” as GET.
 
 
+TOKEN: 6affb8079da281abcfbe60bdd87bbbf6
