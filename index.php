@@ -29,7 +29,7 @@ $app->get("/status", function() use ($app, $APIS) {
 
     $code1 = $res1->body->headers->response_code;
     $code2 = $res2->body->headers->response_code;
-    $code3 = $res3->body->headers->response_code;g
+    $code3 = $res3->body->headers->response_code;
 
 
     /*

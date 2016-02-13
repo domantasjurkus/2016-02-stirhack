@@ -22,3 +22,5 @@ $app->add($cors);
 
 $pdo = new PDO(DB_METHOD.DB_NAME, DB_USERNAME, DB_PASSWORD);
 $db = new NotORM($pdo);
+
+require_once "includes/email.php";
