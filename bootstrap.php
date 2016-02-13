@@ -1,11 +1,7 @@
 <?php
 
-require_once 'includes/config.php';
-require_once 'includes/User.php';
-require_once 'includes/helper.php';
-require_once 'includes/markup.php';
-require_once 'includes/email.php';
-require_once 'vendor/autoload.php';
+require_once "vendor/autoload.php";
+require_once "config.php";
 
 $app = new \Slim\Slim(array(
       "debug"             => true
@@ -23,8 +19,6 @@ $corsOptions = array(
 $cors = new \CorsSlim\CorsSlim($corsOptions);
 
 $app->add($cors);
-
-
 
 $pdo = new PDO(DB_METHOD.DB_NAME, DB_USERNAME, DB_PASSWORD);
 $db = new NotORM($pdo);
