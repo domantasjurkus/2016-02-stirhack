@@ -17,7 +17,7 @@ $app->get('/phpinfo', function() {
     return phpinfo();
 });
 
-$app->get("/status", function() use ($app, $APIS) {
+/*$app->get("/status", function() use ($app, $APIS) {
 
     $headers = array("Accept" => "application/json");
     $body = array("foo" => "hellow", "bar" => "world");
@@ -31,19 +31,19 @@ $app->get("/status", function() use ($app, $APIS) {
     $code3 = $res3->body->headers->response_code;
 
 
-    /*
+
     $response->code;        // HTTP Status code
     $response->headers;     // Headers
     $response->body;        // Parsed body
     $response->raw_body;    // Unparsed body
-    */
+
 
     $app->render("/status.html", array(
         "code1" => $code1,
         "code2" => $code2,
         "code3" => $code3
     ));
-});
+});*/
 
 # Check the APIs every few seconds and record errors
 $app->get("/check/:apiName", function($apiName) use ($app, $db, $APIS) {
@@ -66,6 +66,15 @@ $app->get("/check/:apiName", function($apiName) use ($app, $db, $APIS) {
     }
 
     return $app->response->write("Done checking endpoint");
+});
+
+# Get all APIs
+$app->get("/list", function() use ($app, $db) {
+    $return_data = [];
+    $query = $db->apis();
+    foreach ($query as $row) array_push($return_data, $row["name"]);
+
+    return $app->response->write(json_encode($return_data));
 });
 
 # Get data about a particular API
@@ -138,14 +147,30 @@ $app->post("/add-api", function() use ($app, $db) {
 
     # Create a new table for the API
     $conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
-    $sql = "
+    $sql1 = "
         CREATE TABLE `".$name."` (
             `id` int(11) NOT NULL,
             `code` int(3) NOT NULL,
             `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
     ";
-    $conn->query($sql);
+    $sql2 = "
+        ALTER TABLE `".$name."`
+        ADD PRIMARY KEY (`id`);
+    ";
+    $sql3 = "
+        ALTER TABLE `".$name."`
+        MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+    ";
+
+    $res1 = $conn->query($sql1);
+    $res2 = $conn->query($sql2);
+    $res3 = $conn->query($sql3);
+    var_dump($res1);
+    var_dump($res2);
+    var_dump($res3);
+
     $conn->close();
 
     # Is there an API with the same name?
@@ -183,7 +208,10 @@ $app->post("/add-api", function() use ($app, $db) {
 
 });
 
+# Send an SMS about a requested API statistics
+$app->post("/sms/:apiname", function() {
 
+});
 
 $app->run();
 
