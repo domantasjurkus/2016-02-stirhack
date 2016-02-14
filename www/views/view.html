@@ -12,19 +12,29 @@
     <div class="jumbotron">
         <div id="header" class="container">
             <img id="logo" src="/www/img/logo.png" />
-            <h3 id="heading">View {{apiname}} Statistics</h3>
+            <h3 id="heading">API Doctor</h3>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container add-bottom">
         <div class="jumbotron" style="max-width: 720px;margin: 0 auto;">
 
+            <h3>Realtime statistics for API: {{apiname}}</h3>
+            <div id="timeline" style="width:500px;"></div>
 
+            <form action="{{api}}" method="GET" style="display: inline;">
+                <input class="btn btn-default" type="submit" value="Back to API list" style="margin: 10px 0;">
+            </form>
 
         </div>
     </div>
 
     <script src="/www/js/jquery.min.js"></script>
     <script src="/www/js/view.js"></script>
+    <script>
+        var apihost = "{{api}}";
+        var apiname = "{{apiname}}";
+        query(apihost, apiname);
+    </script>
 </body>
 </html>

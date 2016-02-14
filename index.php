@@ -181,9 +181,6 @@ $app->post("/add-api", function() use ($app, $db) {
     $res1 = $conn->query($sql1);
     $res2 = $conn->query($sql2);
     $res3 = $conn->query($sql3);
-    var_dump($res1);
-    var_dump($res2);
-    var_dump($res3);
 
     $conn->close();
 
@@ -210,7 +207,8 @@ $app->post("/add-api", function() use ($app, $db) {
         $res = Unirest\Request::post("http://jule.chickenkiller.com/stirhack/", $headers, $body);
 
         if ($res) {
-            return $app->response->write("API added to the system");
+            $app->render("/index.html", array());
+            return 0;
         }
 
     } else {
@@ -335,7 +333,18 @@ Try sending \"stats (api name)\" or \"list\" for a list of APIs.</Message></Resp
 # View API page
 $app->get("/view/:apiName", function($apiName) use ($app, $db) {
 
-    $app->render("view.html", array("apiname" => $apiName));
+    $app->render("view.html", array(
+        "api" => API_HOST,
+        "apiname" => $apiName
+    ));
+});
+
+# View Add API page
+$app->get("/add", function() use ($app, $db) {
+
+    $app->render("add.html", array(
+        "api" => API_HOST,
+    ));
 });
 
 $app->run();
