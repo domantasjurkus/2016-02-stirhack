@@ -1,0 +1,104 @@
+body { 
+	padding-top: 70px; 
+}
+
+.input-style{
+	margin-top: 8px;
+	padding: 5px 5px 6px 5px;
+	border-radius:4px;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.header-style{
+	padding-top: 8px;
+	margin-bottom: -10px;
+	width: 600px;
+}
+
+.mainContent{
+	
+}
+.container-fluid{
+	background-color: #22C977;
+}
+.footer{
+	
+}
+
+.search-button{
+	margin-top: 8px;
+	padding: 5px 5px 6px 5px;
+}
+
+.imgsize{
+	height: 50px;
+}
+
+
+.btn-default{
+	padding:6px 20px;
+}
+
+.main-content{
+	margin-top: -20px;
+	display: table;
+	width: 100%;
+}
+
+.rows-style{
+	display:table-row;
+}
+
+.logo{
+	display: table-cell;
+	height: 200px;
+	width: 200px;
+	background-color: #eee;
+}
+
+.logo-image{
+	height: 170px;
+    margin: 15px 30px;
+}
+
+.title{
+	display: table-cell;
+	min-height:300px;
+	background-color: #ddd;
+}
+
+.title-text{
+	font-size: 54px;
+	margin-left: 100px;
+
+}
+.apis{
+	vertical-align: top;
+	display: table-cell;
+}
+.api-box{
+	width: 200px;
+	height: 70px;
+	font-size: 24px;
+	text-align: center;
+	padding-top: 20px;
+	border-top: 1px solid gray;
+	background-color: #ddd;
+}
+
+.cell{
+	display: table-cell;
+}
+
+.navbar-nav{
+	margin-left: 115px;
+}
+.footer{
+	background-color: #ccc;
+}
+
+.text-muted{
+	margin: 10px -60px 10px;
+}
