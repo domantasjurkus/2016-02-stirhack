@@ -3,6 +3,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
 
+    <script src="/www/js/d3.v2.min.js" type="application/javascript"></script>
+    <script src="/www/js/timeknots.js" type="application/javascript"></script>
     <link rel="stylesheet" type="text/css" href="/www/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/www/css/style.css">
 </head>
@@ -10,26 +12,19 @@
     <div class="jumbotron">
         <div id="header" class="container">
             <img id="logo" src="/www/img/logo.png" />
-            <h3 id="heading">API Doctor</h3>
+            <h3 id="heading">View {{apiname}} Statistics</h3>
         </div>
     </div>
 
     <div class="container">
         <div class="jumbotron" style="max-width: 720px;margin: 0 auto;">
 
-            <h2>Select a service to inspect</h2>
 
-            {% for name in list %}
-                <form action="{{api}}/view/{{name}}" method="GET" style="display: inline;">
-                    <input class="btn btn-default" type="submit" value="Inspect {{name}}" style="margin: 10px 0;">
-                </form>
-            {% endfor %}
 
         </div>
     </div>
 
     <script src="/www/js/jquery.min.js"></script>
-    <script src="/www/js/jquery.validate.min.js"></script>
-    <script src="/www/js/check-password.js"></script>
+    <script src="/www/js/view.js"></script>
 </body>
 </html>

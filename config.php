@@ -1,7 +1,8 @@
 <?php
 
 # API configuration
-define('API_HOST', 'http://localhost');
+define('API_HOST', 'http://fbf9278d.ngrok.io');
+define("POUNDING_SPEED", 5);
 
 # Database configuration
 define('DB_METHOD', 'mysql:dbname=');

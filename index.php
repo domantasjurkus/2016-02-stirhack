@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/bootstrap.php';
+require_once "vendor/mashape/unirest-php/src/Unirest.php";
 
 $APIS = [
     "http://dogfish.tech/api/api1/lax",
@@ -8,9 +9,16 @@ $APIS = [
     "http://dogfish.tech/api/api3/usd,eur"
 ];
 
-# Test routes
+
 $app->get('/', function() use ($app, $db) {
-    $app->render("/index.html", array());
+    $list = [];
+    $query = $db->apis();
+    foreach ($query as $row) array_push($list, $row["name"]);
+
+    $app->render("/index.html", array(
+        "api" => API_HOST,
+        "list" => $list
+    ));
 });
 
 $app->get('/phpinfo', function() {
@@ -54,15 +62,21 @@ $app->get("/check/:apiName", function($apiName) use ($app, $db, $APIS) {
         return $app->response->write("No such endpoint");
     }
 
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < POUNDING_SPEED; $i++) {
         $headers = array("Accept" => "application/json");
         $res = Unirest\Request::get($APIS[0], $headers);
         $code = $res->code;
 
+        # Some 200 requests may not return a JSON object, but a string
+        # If so, we assign them to 204
+        if ($code == 200) {
+            if (gettype($res->body) != "object") {
+                $code = 204;
+            }
+        }
 
         $data = array("code" => $code);
         $query = $db->$apiName()->insert($data);
-        var_dump($query);
     }
 
     return $app->response->write("Done checking endpoint");
@@ -84,7 +98,7 @@ $app->get("/get/:apiName", function($apiName) use ($app, $db, $APIS) {
     if (!$db->$apiName()->fetch()) return $app->response->write("No such endpoint");
     $data = $db->$apiName();
 
-    $error_codes = ["404", "500"];
+    $error_codes = ["204", "404", "500"];
 
     $return_data = array();
 
@@ -195,8 +209,6 @@ $app->post("/add-api", function() use ($app, $db) {
         $body = array("endpoint" => $endpoint);
         $res = Unirest\Request::post("http://jule.chickenkiller.com/stirhack/", $headers, $body);
 
-        var_dump($res->body);
-
         if ($res) {
             return $app->response->write("API added to the system");
         }
@@ -209,8 +221,121 @@ $app->post("/add-api", function() use ($app, $db) {
 });
 
 # Send an SMS about a requested API statistics
-$app->post("/sms/:apiname", function() {
+$app->post("/smsroute", function() use ($app, $db) {
 
+    # $response = new Services_Twilio_Twiml;
+    $body = strtolower($_REQUEST['Body']);
+
+    # Log request for debugging
+    # file_put_contents("/sms/log.txt", $body.PHP_EOL, FILE_APPEND);
+
+    $words = explode(" ", $body);
+
+    # Hello
+    if ($words[0] == "hello") {
+        header("content-type: text/xml");
+        $string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Message>...
+
+Hello, I am API Doctor. Try sending me \"list\" for a list of available APIs or \"stats (api name)\" for realtime statistics for a particular endpoint.</Message></Response>";
+        return $app->response->write($string);
+
+    # Send a list of API names
+    } else if ($words[0] == "list") {
+
+        $name_list = [];
+        $query = $db->apis();
+        foreach ($query as $row) array_push($name_list, $row["name"]);
+        $string = implode(", ", $name_list);
+
+        header("content-type: text/xml");
+        $string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Message>...
+
+List of available APIs:
+
+" . $string . "</Message></Response>";
+        return $app->response->write($string);
+
+    # Send statistics about APIs
+    } else if ($words[0] == "stats") {
+
+        $name_list = [];
+        $query = $db->apis();
+        foreach ($query as $row) array_push($name_list, $row["name"]);
+
+        if (!in_array($words[1], $name_list)) {
+            header("content-type: text/xml");
+            $string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Message>...
+
+Err, I do not know that API.
+
+Try sending \"stats (api name)\" or \"list\" for a list of APIs.</Message></Response>";
+            return $app->response->write($string);
+
+        # Else - this API exists - compute statistics
+        } else {
+
+            # Call this API for data
+            $headers = array("Accept" => "application/json");
+            $res = Unirest\Request::get("http://localhost/get/".$words[1], $headers);
+
+            $data = json_decode(json_encode($res->body), true);
+
+            $sum = $data["200"] + $data["204"]["count"]+$data["404"]["count"]+$data["500"]["count"];
+            $uptime = (round(($data["200"]/$sum), 4)*100)."%";
+
+            # Check for each error
+            if ($data["204"]["count"] > 0) {
+                $last_204 = "204: ".date("Y-m-d H:i:s", end($data["204"]["times"]));
+            } else {
+                $last_204 = "204: No faults registered";
+            }
+
+            if ($data["404"]["count"] > 0) {
+                $last_404 = "404: ".date("Y-m-d H:i:s", end($data["404"]["times"]));
+            } else {
+                $last_404 = "404: No faults registered";
+            }
+
+            if ($data["500"]["count"] > 0) {
+                $last_500 = "500: ".date("Y-m-d H:i:s", end($data["500"]["times"]));
+            } else {
+                $last_500 = "500: No faults registered";
+            }
+
+            header("content-type: text/xml");
+            $string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Message>...
+
+Statistics for ".$words[1].":
+
+Uptime: ".$uptime."
+
+Last most common errors:
+".$last_204."
+".$last_404."
+".$last_500."
+</Message></Response>";
+            return $app->response->write($string);
+
+        }
+
+
+    }
+
+    # Else - what the hell are you sending
+    header("content-type: text/xml");
+    $string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Message>...
+
+Err, I don't know that command means.
+
+Try sending \"stats (api name)\" or \"list\" for a list of APIs.</Message></Response>";
+    return $app->response->write($string);
+
+});
+
+# View API page
+$app->get("/view/:apiName", function($apiName) use ($app, $db) {
+
+    $app->render("view.html", array("apiname" => $apiName));
 });
 
 $app->run();

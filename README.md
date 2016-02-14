@@ -18,3 +18,6 @@ If you would like to force an API to fail, pass “broken=1” as GET. To force 
 
 
 TOKEN: 6affb8079da281abcfbe60bdd87bbbf6
+
+SK6e7b21bef691d7e93c5cb84297500906
+hoZbWQw220QyaqLrSoJt5YNMPygsRlYx
