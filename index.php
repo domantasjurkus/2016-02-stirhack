@@ -99,7 +99,6 @@ $app->get("/get/:apiName", function($apiName) use ($app, $db, $APIS) {
     $data = $db->$apiName();
 
     $error_codes = ["204", "404", "500"];
-
     $return_data = array();
 
     # 200
@@ -118,6 +117,11 @@ $app->get("/get/:apiName", function($apiName) use ($app, $db, $APIS) {
         $return_data[$error_code] = $data_return;
     }
 
+    $sum = $return_data["200"]+$return_data["204"]["count"]+$return_data["404"]["count"]+$return_data["500"]["count"];
+    $prop = $return_data["200"]/$sum;
+    $uptime = round($prop*100, 2)."%";
+    $return_data["uptime"] = $uptime;
+
     return $app->response->write(json_encode($return_data));
 });
 
@@ -126,9 +130,9 @@ $app->get("/get/:apiName/:from/:to", function($apiName, $from_timestamp, $to_tim
 
     # Check if API exists
     if (!$db->$apiName()->fetch()) return $app->response->write("No such endpoint");
-    $data = $db->$apiName();
 
-    $error_codes = ["404", "500"];
+    $data = $db->$apiName();
+    $error_codes = ["204", "404", "500"];
     $return_data = array();
 
     $from = date("Y-m-d H:i:s", $from_timestamp);
@@ -136,7 +140,6 @@ $app->get("/get/:apiName/:from/:to", function($apiName, $from_timestamp, $to_tim
 
     # 200
     $return_data["200"] = count($data->where("code", 200)->and("timestamp > ?", $from)->and("timestamp < ?", $to));
-
     # Loop through each error type
     foreach ($error_codes as $error_code) {
         $data_db = $db->$apiName()->where("code", $error_code)->and("timestamp > ?", $from)->and("timestamp < ?", $to);
@@ -203,13 +206,15 @@ $app->post("/add-api", function() use ($app, $db) {
 
         # Append the endpoint to the Raspberry crontab
         $headers = array("Accept" => "application/json");
-        $body = array("endpoint" => $endpoint);
+        $body = array("name" => $name);
         $res = Unirest\Request::post("http://jule.chickenkiller.com/stirhack/", $headers, $body);
 
-        if ($res) {
+        return $app->response->write($res->body);
+
+        /*if ($res) {
             $app->render("/index.html", array());
             return 0;
-        }
+        }*/
 
     } else {
         $app->response->setStatus(500);

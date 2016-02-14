@@ -2,7 +2,7 @@
 
 # API configuration
 define('API_HOST', 'http://fbf9278d.ngrok.io');
-define("POUNDING_SPEED", 5);
+define("POUNDING_SPEED", 40);
 
 # Database configuration
 define('DB_METHOD', 'mysql:dbname=');
